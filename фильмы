@@ -1,0 +1,52 @@
+from tkinter import *
+from tkinter import ttk
+import pandas as pd
+films = pd.read_csv('imdb_top_250.csv')
+film_genres_list = list(films['Genre'])
+name_film=list(films['Title'])
+Sport=[]
+War=[]
+for i in range(len(film_genres_list)):
+    x=film_genres_list[i]
+    k=x.count('|')
+    if k>0:
+        for y in range (k):
+            index=x.find('|')
+            p=x[:index]
+            if p=='Sport ':
+                Sport.append(name_film[i])
+                x=x.replace("Sport | ", "")
+            elif p=='War ':
+                War.append(name_film[i]) 
+                x=x.replace("War | ", "")
+            k2=x.count('|')    
+            if k2+1-y==1:
+                if x=='Sport':
+                    Sport.append(name_film[i]) 
+                elif x=='War':
+                    War.append(name_film[i])  
+    else:
+        if x=='Sport':
+            Sport.append(name_film[i]) 
+        elif x=='War':
+            War.append(name_film[i])   
+def calculate(*args):
+        t = str(mainframe.get())
+        if t=='Sport':
+            v=random.randint(0, len(Sport)-1)
+            meters.set(Sport[v])
+        elif t=='War':
+            v=random.randint(0, len(War)-1)
+            meters.set(War[v])  
+root = Tk()
+mainframe = ttk.Frame(root, padding="3 3 12 12")
+mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+feet = StringVar()
+feet_entry = ttk.Entry(mainframe, width=7, textvariable=feet)
+feet_entry.grid(column=2, row=1, sticky=(W, E))
+meters = StringVar()
+ttk.Label(mainframe, textvariable=meters).grid(column=2, row=2, sticky=(W, E))
+ttk.Button(mainframe, text="Calculate", command=calculate).grid(column=3, row=3, sticky=W) 
+root.mainloop()
